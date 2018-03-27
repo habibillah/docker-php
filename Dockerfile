@@ -1,5 +1,12 @@
 FROM php:7.2-apache
-RUN apt-get update && apt-get install -y \
+
+#ENV APACHE_DOCUMENT_ROOT /var/webapp/public
+
+RUN sed -ri -e 's!/var/www/html!/var/webapp/public!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!/var/webapp/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN mkdir -p /var/webapp/public \
+    && apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev libxml2-dev \
@@ -14,7 +21,9 @@ RUN apt-get update && apt-get install -y \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install zip \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && service apache2 restart
     
+
 
 
