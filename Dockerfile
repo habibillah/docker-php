@@ -1,7 +1,5 @@
 FROM php:7.2-apache
 
-ENV APACHE_DOCUMENT_ROOT /var/webapp/public
-
 RUN sed -ri -e 's!/var/www/html!/var/webapp/public!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!/var/webapp/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
@@ -23,8 +21,9 @@ RUN mkdir -p /var/webapp/public \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install zip \
-    && a2enmod rewrite \
-    && service apache2 restart
+    && a2enmod rewrite
+    
+RUN service apache2 restart    
     
 
 
